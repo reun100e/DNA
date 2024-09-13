@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 import Note from "../components/Note";
-import "../styles/Home.css";
+import "../styles/NoteHome.css";
 
 function Notes() {
   const [notes, setNotes] = useState([]);

@@ -1,5 +1,7 @@
 import react from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
+import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -18,14 +20,19 @@ function RegisterAndLogout() {
 }
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+
   return (
     <BrowserRouter>
+      <Navbar />
+      <div className="fx-circle-1"></div>
+      <div className="fx-circle-2"></div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/notes"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute setIsLoggedIn={setIsLoggedIn}>
               <Notes />
             </ProtectedRoute>
           }

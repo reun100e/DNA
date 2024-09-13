@@ -1,20 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/Home.css";
 
 function Home() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-
-    const login_btn = (e) => {
-        e.preventDefault();
-        navigate("/login");
-    }
-
+  const login_btn = (e) => {
+    e.preventDefault();
+    navigate("/login");
+  };
 
   return (
     <div>
-      <h1>Home</h1>
-      <button onClick={login_btn}>Login</button>
+      <h2>DOCTORS INTEGRATED INTERNATIONAL</h2>
+      <h1>MODEL UNITED NATIONS</h1>
+      <p>THREE committees, TWO topics, ONE day</p>
+      <button onClick={login_btn}>Register Today</button>
     </div>
   );
 }

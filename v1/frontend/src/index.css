@@ -1,0 +1,74 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+
+  font-family: "karla", sans-serif, system-ui, Helvetica, Arial;
+  font-feature-settings: "liga" 0;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+
+  --color-1: #51bbcf;
+  --color-2: #263541;
+  --color-3: #6b6b6b;
+  --color-4: #b5b7ce;
+  --color-white: #cee1ef;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+  font-size: 16px;
+}
+
+body {
+  color: var(--color-white);
+  background-color: var(--color-2);
+  overflow-x: hidden;
+  font-size: 1em;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.fx-circle-1 {
+  height: 500px;
+  width: 300px;
+  position: absolute;
+  left: -20rem;
+  top: -10rem;
+  border-radius: 50%;
+  background-color: var(--color-1);
+  filter: blur(10rem);
+  rotate: 20deg;
+  z-index: -100;
+}
+
+.fx-circle-2 {
+  height: 500px;
+  width: 300px;
+  position: absolute;
+  right: -10rem;
+  top: 50rem;
+  border-radius: 50%;
+  background-color: var(--color-1);
+  filter: blur(10rem);
+  rotate: 20deg;
+  z-index: -100;
+}

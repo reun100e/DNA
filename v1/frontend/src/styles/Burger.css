@@ -1,6 +1,6 @@
 .burger-menu {
-  height: 100%;
-  width: 2.5rem;
+  height: 3rem;
+  width: 2rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -10,7 +10,7 @@
 
 .burger-bar {
   width: 100%;
-  height: 0.25rem;
+  height: 0.2rem;
   border-radius: 1rem;
   background-color: var(--color-white);
 }
@@ -28,7 +28,7 @@
 /*.......Burger animation.......*/
 /* clicked */
 .burger-bar.clicked:nth-child(1) {
-  transform: rotate(45deg) translate(0.3rem, 1.05rem) scale(0.8);
+  transform: rotate(45deg) translate(0.28rem, 0.85rem) scale(0.8);
   transition: ease-in-out 0.4s;
 }
 .burger-bar.clicked:nth-child(2) {
@@ -36,7 +36,7 @@
   transition: ease-in-out 0.4s;
 }
 .burger-bar.clicked:nth-child(3) {
-  transform: rotate(135deg) translate(-0.25rem, 1.05rem) scale(0.8);
+  transform: rotate(135deg) translate(-0.20rem, 0.75rem) scale(0.8);
   transition: ease-in-out 0.4s;
 }
 

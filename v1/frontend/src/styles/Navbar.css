@@ -4,10 +4,9 @@ nav {
   justify-content: space-between;
   align-items: center;
   background-color: none;
-  margin: 1rem;
 }
 
-.logo{
+.logo {
   object-fit: cover;
   height: 100%;
   width: 3rem;

@@ -22,7 +22,9 @@
   --color-2: #263541;
   --color-3: #6b6b6b;
   --color-4: #b5b7ce;
-  --color-white: #cee1ef;
+  --color-white: #edf0f2;
+  --color-transparent: #ffffff00;
+  --color-transparent-1: #51bacf2b;
 }
 
 *::-webkit-scrollbar {
@@ -45,6 +47,16 @@ body {
 a {
   color: inherit;
   text-decoration: inherit;
+}
+
+::placeholder {
+  color: var(--color-white);
+  opacity: 1; /* Firefox */
+}
+
+::-ms-input-placeholder {
+  /* Edge 12 -18 */
+  color: var(--color-white);
 }
 
 .fx-circle-1 {
@@ -71,4 +83,31 @@ a {
   filter: blur(10rem);
   rotate: 20deg;
   z-index: -100;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }

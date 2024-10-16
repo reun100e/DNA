@@ -1,0 +1,9 @@
+# Django #
+__pycache__
+db.sqlite
+
+# Environments
+myenv/
+
+#
+notes/

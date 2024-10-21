@@ -131,7 +131,9 @@ SIMPLE_JWT = {
 }
 
 
+# SECURE_SSL_REDIRECT = True  # Force HTTPS in production
 SECURE_COOKIES = False  # Set to True in production
+# CSRF_COOKIE_SECURE = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

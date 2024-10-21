@@ -112,7 +112,7 @@ class RefreshTokenView(APIView):
             value=new_access_token,
             httponly=True,
             secure=settings.SECURE_COOKIES,  # Use secure=True in production
-            samesite="Strict",
+            samesite="Lax",
             max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(),  # Set from SIMPLE_JWT settings
         )
         return response

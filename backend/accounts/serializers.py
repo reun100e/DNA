@@ -21,7 +21,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'phone_number']
+        fields = ['username', 'email', 'password', 'phone_number', 'dna_id']
+        read_only_fields = ['dna_id']  # Prevent users from changing dna_id
+
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -59,16 +61,16 @@ class BasicUserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name']
+        fields = ['username', 'first_name', 'last_name', 'dna_id']
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         # User can see all these fields
-        fields = ['id', 'username', 'email', 'phone_number', 'is_phone_verified', 'is_email_verified']
+        fields = ['username', 'email', 'phone_number', 'is_phone_verified', 'is_email_verified', 'dna_id']
         # User cannot edit these fields
-        read_only_fields = ['id', 'username', 'is_phone_verified', 'is_email_verified']
+        read_only_fields = ['username', 'is_phone_verified', 'is_email_verified', 'dna_id']
 
     def update(self, instance, validated_data):
         # Only allow updating email and phone_number

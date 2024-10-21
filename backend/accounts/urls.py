@@ -12,7 +12,7 @@ urlpatterns = [
     path("users/refresh/", RefreshTokenView.as_view(), name="user-token-refresh"),
 
     # User Profile
-    path("me/", UserProfileView.as_view(), name="user-list"),
+    path("me/", UserProfileView.as_view(), name="user-profile"),
 
     # Logout
     path("users/logout/", LogoutView.as_view(), name="user-logout"),

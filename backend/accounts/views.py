@@ -120,6 +120,13 @@ class RefreshTokenView(APIView):
 
 class LogoutView(APIView):
     def post(self, request):
+        try:
+            refresh_token = request.COOKIES.get('refresh')
+            token = RefreshToken(refresh_token)
+            token.blacklist() # Blacklist the token
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         response = Response({"detail": "Logged out"}, status=status.HTTP_200_OK)
         response.delete_cookie('access')
         response.delete_cookie('refresh')

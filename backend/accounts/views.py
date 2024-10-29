@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import UserProfileSerializer, RegisterSerializer, LoginSerializer
 from django.conf import settings
+from django.utils.timezone import now
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
@@ -48,7 +49,7 @@ class LoginView(APIView):
             )  # Call the serializer's create() method to return tokens
 
             response = Response(
-                {"detail": "Login successful", "user": BasicUserSerializer(user).data},
+                {"status": "success",  "message": "Login successful", "data": {"user": BasicUserSerializer(user).data}, "timestamp": now().isoformat()},
                 status=status.HTTP_200_OK,
             )
 
@@ -68,7 +69,7 @@ class LoginView(APIView):
             value=access_token,
             httponly=True,
             secure=settings.SECURE_COOKIES,
-            samesite='Lax',
+            samesite='None',
             max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
         )
 
@@ -77,7 +78,7 @@ class LoginView(APIView):
             value=refresh_token,
             httponly=True,
             secure=settings.SECURE_COOKIES,
-            samesite='Strict',
+            samesite='None',
             max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()
         )
 
@@ -112,7 +113,7 @@ class RefreshTokenView(APIView):
             value=new_access_token,
             httponly=True,
             secure=settings.SECURE_COOKIES,  # Use secure=True in production
-            samesite="Lax",
+            samesite="None",
             max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(),  # Set from SIMPLE_JWT settings
         )
         return response
@@ -132,3 +133,14 @@ class LogoutView(APIView):
         response.delete_cookie('refresh')
         request.session.flush() # Logs the user out and clears session data
         return response
+
+class VerifyEmailView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        return Response({"message": "Email Verified"}, status=status.HTTP_200_OK)
+
+
+class VerifyPhoneView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        return Response({"message": "Phone Verified"}, status=status.HTTP_200_OK)

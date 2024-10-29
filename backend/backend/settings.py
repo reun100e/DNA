@@ -107,21 +107,27 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"user": "60/minute",},
 }
 
+# SESSION_COOKIE_SAMESITE = 'None'  # Required for cross-site requests
+# SESSION_COOKIE_SECURE = False      # Ensure cookies are only sent over HTTPS
+
+# CSRF_COOKIE_SAMESITE = 'None'
+
+# SESSION_COOKIE_SECURE = False # change in production
+# CSRF_COOKIE_SECURE = False # change in production
+
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:5173",
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-]
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
 CORS_ALLOW_CREDENTIALS = True
 
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Short lifetime for access token
+    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=5),  # Short lifetime for access token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Longer lifetime for refresh token
     'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens on use
     'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old refresh tokens
@@ -129,11 +135,16 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_REFRESH': 'refresh',
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': settings.SECRET_KEY,
+
+    # 'AUTH_COOKIE_SECURE': True,     # Secure flag for HTTPS
+    'AUTH_COOKIE_HTTP_ONLY': True,  # HTTP-only flag
+    'AUTH_COOKIE_SAMESITE': 'None',  # Important for cross-origin requests
+    'AUTH_COOKIE_PATH': '/',        # Ensure it's available to the entire app
 }
 
 
 # SECURE_SSL_REDIRECT = True  # Force HTTPS in production
-SECURE_COOKIES = False  # Set to True in production
+SECURE_COOKIES = True  # Set to True in production
 # CSRF_COOKIE_SECURE = True
 
 # Internationalization

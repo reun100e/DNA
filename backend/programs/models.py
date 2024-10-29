@@ -6,7 +6,6 @@ class Program(models.Model):
     description = models.TextField()
     start_date = models.DateField()
     end_date = models.DateField()
-    participants = models.ManyToManyField(User, related_name='programs')
 
     def __str__(self):
         return self.name
@@ -16,6 +15,7 @@ class Event(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='events')
     description = models.TextField()
     event_date = models.DateField()
+    participants = models.ManyToManyField(User, related_name='events')
 
     def __str__(self):
         return f"{self.name} - {self.program.name}"

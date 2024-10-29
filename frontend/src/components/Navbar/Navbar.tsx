@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import "../../styles/navbar.css";
-
 import { LogInOut } from "../Auth/LogInOut";
 
 type MenuItem = {
@@ -31,81 +30,49 @@ const menuData: MenuItem[] = [
       { label: "MUN Workshop", link: "/workshop" },
     ],
   },
-  {
-    label: "Gallery",
-    link: "/gallery",
-    submenu: [{ label: "2021" }, { label: "2022" }],
-  },
-  {
-    label: "Contact",
-    link: "/contact",
-  },
+  { label: "Gallery", link: "/gallery", submenu: [{ label: "2021" }, { label: "2022" }] },
+  { label: "Contact", link: "/contact" },
 ];
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC = React.memo(() => {
   const { isAuthenticated, user } = useAuth();
-  console.log("Navbar auth: " + isAuthenticated)
-
-
-  const [menuOpen, setMenuOpen] = useState(false); // For mobile menu toggle
-  const [activeMenu, setActiveMenu] = useState<number | null>(null); // For open desktop submenus
+  const [menuOpen, setMenuOpen] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
 
-  // Close all menus if user clicks outside the navbar
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      navbarRef.current &&
-      !navbarRef.current.contains(event.target as Node)
-    ) {
-      setActiveMenu(null);
+  // Close all menus if user clicks outside
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
       setMenuOpen(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [handleClickOutside]);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen); // Mobile menu toggle
+  const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
 
-  // Desktop: Toggle submenu on hover
-  const handleHover = (index: number) => setActiveMenu(index);
-
-  // Mobile: Toggle submenu on click
-  const toggleSubMenu = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const submenu = e.currentTarget.querySelector("ul");
-    if (submenu) {
-      submenu.style.display =
-        submenu.style.display === "block" ? "none" : "block";
-    }
-  };
-
-  const renderMenu = (items: MenuItem[], depth = 0) =>
-    items.map((item, index) => (
-      <li
-        key={`${item.label}-${index}`}
-        className={`navbar-item ${item.submenu ? "has-submenu" : ""}`}
-        onClick={toggleSubMenu}
-        onMouseEnter={() => handleHover(index)} // Desktop hover behavior
-        onMouseLeave={() => setActiveMenu(null)}
-        style={{ paddingLeft: depth * 20 + "px" }} // Indentation for mobile
-      >
-        <a href={item.link || "#"} className="navbar-link">
-          {item.label}
-        </a>
-        {item.submenu && (
-          <ul
-            className={`submenu depth-${depth} ${
-              activeMenu === index ? "show" : ""
-            }`}
-          >
-            {renderMenu(item.submenu, depth + 1)}
-          </ul>
-        )}
-      </li>
-    ));
+  const renderMenu = useCallback(
+    (items: MenuItem[], depth = 0) =>
+      items.map((item, index) => (
+        <li
+          key={`${item.label}-${index}`}
+          className={`navbar-item ${item.submenu ? "has-submenu" : ""}`}
+          style={{ paddingLeft: `${depth * 20}px` }} // Indent mobile submenus
+        >
+          <a href={item.link || "#"} className="navbar-link">
+            {item.label}
+          </a>
+          {item.submenu && (
+            <ul className={`submenu depth-${depth}`}>
+              {renderMenu(item.submenu, depth + 1)}
+            </ul>
+          )}
+        </li>
+      )),
+    []
+  );
 
   return (
     <nav className="navbar" ref={navbarRef}>
@@ -123,12 +90,12 @@ const Navbar: React.FC = () => {
           {renderMenu(menuData)}
         </ul>
         <div>
-          <div>{isAuthenticated ? (<><li><span>Welcome, {user?.first_name}</span></li></>) : (<></>)}</div>
+          {isAuthenticated && <li>Welcome, {user?.first_name}</li>}
           <LogInOut />
         </div>
       </div>
     </nav>
   );
-};
+});
 
 export default Navbar;

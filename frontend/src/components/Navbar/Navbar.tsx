@@ -24,7 +24,7 @@ const menuData: MenuItem[] = [
     link: "/workshop",
     submenu: [
       {
-        label: "Effective doctor patient communications",
+        label: "Doctor patient communication",
         link: "/workshop",
       },
       { label: "MUN Workshop", link: "/workshop" },
@@ -54,7 +54,7 @@ const Navbar: React.FC = React.memo(() => {
   const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
 
   const renderMenu = useCallback(
-    (items: MenuItem[], depth = 0) =>
+    (items: MenuItem[], depth = -1) =>
       items.map((item, index) => (
         <li
           key={`${item.label}-${index}`}
@@ -84,8 +84,8 @@ const Navbar: React.FC = React.memo(() => {
           <span className={`burger ${menuOpen ? "opened" : "closed"}`} />
         </button>
 
-        <a href="/" className="navbar-logo">
-          DNA
+        <a href="/">
+          <img  className="navbar-logo" src="./favicon.ico" alt="logo" />
         </a>
         <ul className={`navbar-menu ${menuOpen ? "open" : ""}`}>
           {renderMenu(menuData)}

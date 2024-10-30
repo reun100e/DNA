@@ -1,6 +1,6 @@
 .navbar {
   background-color: #1e1e2f;
-  padding: 15px 20px;
+  padding: 0.6rem 1rem 0.5rem ;
   position: fixed;
   width: 100%;
   top: 0;
@@ -27,9 +27,7 @@ li {
 }
 
 .navbar-logo {
-  font-size: 1.8rem;
-  color: white;
-  text-decoration: none;
+  object-fit: cover;
 }
 .navbar-link {
   color: #fff;
@@ -47,6 +45,7 @@ li {
 }
 .navbar-item {
   padding: 1rem;
+
 }
 
 .navbar-welcome {
@@ -80,7 +79,7 @@ li {
 }
 
 .burger.opened:nth-of-type(1) {
-  transform: rotate(45deg) translate(0.25rem, 1.05rem) scale(0.8);
+  transform: rotate(45deg) translate(0.55rem, 0.5rem) scale(0.8);
   transition: ease-out 0.3s;
 }
 
@@ -90,7 +89,7 @@ li {
 }
 
 .burger.opened:nth-of-type(3) {
-  transform: rotate(135deg) translate(0.1rem, 0.75rem) scale(0.8);
+  transform: rotate(135deg) translate(-0.5rem, 0.40rem) scale(0.8);
   transition: ease-out 0.3s;
 }
 
@@ -129,20 +128,19 @@ li {
     max-height: 100vh;
   }
 
-  .navbar-menu ul,
-  li {
-    padding: none;
-  }
-
   .down-arrow {
     border: solid rgb(255, 255, 255);
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
-    margin: 0px 15px 5px;
+    margin: 0px 20px 5px;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
   }
+
+  /* .navbar-welcome {
+    display: none;
+  } */
 }
 
 /* Submenu Styles */
@@ -167,11 +165,8 @@ li {
 @media (max-width: 768px) {
   .submenu {
     position: static;
+    margin-top: 1rem;
   }
-
-  /* .navbar-item {
-    padding-left: 20px;
-  } */
 }
 
 .navbar-item.has-submenu {

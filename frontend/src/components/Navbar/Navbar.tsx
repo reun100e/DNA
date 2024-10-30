@@ -24,7 +24,7 @@ const menuData: MenuItem[] = [
     link: "/workshop",
     submenu: [
       {
-        label: "Workshop on effective doctor patient communications",
+        label: "Effective doctor patient communications",
         link: "/workshop",
       },
       { label: "MUN Workshop", link: "/workshop" },
@@ -64,6 +64,7 @@ const Navbar: React.FC = React.memo(() => {
           <a href={item.link || "#"} className="navbar-link">
             {item.label}
           </a>
+          {item.submenu ? <i className="down-arrow"></i> : ""}
           {item.submenu && (
             <ul className={`submenu depth-${depth}`}>
               {renderMenu(item.submenu, depth + 1)}
@@ -89,7 +90,7 @@ const Navbar: React.FC = React.memo(() => {
         <ul className={`navbar-menu ${menuOpen ? "open" : ""}`}>
           {renderMenu(menuData)}
         </ul>
-        <div>
+        <div className="navbar-welcome">
           {isAuthenticated && <li>Welcome, {user?.first_name}</li>}
           <LogInOut />
         </div>

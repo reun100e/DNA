@@ -23,7 +23,7 @@
 .navbar-menu ul,
 li {
   list-style-type: none;
-  padding: 0 2rem;
+  padding: 0 1rem;
 }
 
 .navbar-logo {
@@ -34,14 +34,29 @@ li {
 .navbar-link {
   color: #fff;
   text-decoration: none;
-  padding: 10px 15px;
+  /* background-color: #81d4fa; */
+  padding: 0.5rem;
   font-size: 1.1rem;
   transition: color 0.3s, background-color 0.3s;
+  text-wrap: nowrap;
 }
 .navbar-link:hover {
   color: #81d4fa;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 5px;
+}
+.navbar-item {
+  padding: 1rem;
+}
+
+.navbar-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.down-arrow {
+  display: none;
 }
 
 /* Burger Menu */
@@ -119,8 +134,14 @@ li {
     padding: none;
   }
 
-  .navbar-item {
-    padding: 10px;
+  .down-arrow {
+    border: solid rgb(255, 255, 255);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    margin: 0px 15px 5px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
   }
 }
 
@@ -148,9 +169,9 @@ li {
     position: static;
   }
 
-  .navbar-item {
+  /* .navbar-item {
     padding-left: 20px;
-  }
+  } */
 }
 
 .navbar-item.has-submenu {

@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthUser, LoginCredentials, RegisterFormData } from '../types/auth.types';
-import { loginUser, registerUser, fetchUserProfile, logoutUser, verifyEmailOtp, verifyPhoneOtp, resendEmailOtp, resendPhoneOtp } from '../services/authService';
+import { loginUser, registerUser, fetchUserProfile, logoutUser, verifyEmailOtp, verifyPhoneOtp, resendEmailOtp, resendPhoneOtp, patchUserProfile } from '../services/authService';
 
 interface AuthContextProps {
   user: AuthUser | null;
@@ -14,6 +14,7 @@ interface AuthContextProps {
   fetchProfile: () => Promise<void>;
   resendEmailOtp: () => Promise<void>;
   resendPhoneOtp: () => Promise<void>;
+  updateUser: (updatedUser: Partial<AuthUser>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -24,19 +25,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const storedUser = localStorage.getItem('user');
-    // if (storedUser) {
-    //   setUser(JSON.parse(storedUser));
-    //   setIsAuthenticated(true);
     fetchProfile().catch(() => logout()); // Logout on failure to fetch latest user data on app load.
-    // }
   }, []);
 
   const fetchProfile = async () => {
     try {
       const profile = await fetchUserProfile();
       setUser(profile);
-      // localStorage.setItem('user', JSON.stringify(profile));
       setIsAuthenticated(true)
     } catch (error) {
       console.error('Failed to fetch user profile', error);
@@ -49,7 +44,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(userData);
     console.log(userData);
     setIsAuthenticated(true);
-    // localStorage.setItem('user', JSON.stringify(userData));
     await fetchProfile(); // Ensure fresh data after login.
     navigate('/dashboard');
   };
@@ -59,7 +53,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const userData = data.user;
     setUser(userData);
     setIsAuthenticated(true);
-    // localStorage.setItem('user', JSON.stringify(userData));
     navigate('/verify');
   };
 
@@ -67,7 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     logoutUser();
     setUser(null);
     setIsAuthenticated(false);
-    // localStorage.removeItem('user');
     navigate('/login');
   };
 
@@ -82,8 +74,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     navigate('/dashboard');
   };
 
+  const updateUser = async (updatedUser: Partial<AuthUser>) => {
+    try {
+      // Send update request to the backend
+      const updatedProfile = await patchUserProfile(updatedUser);
+
+      // If successful, update the React state with the new user profile
+      setUser(updatedProfile);
+    } catch (error: any) {
+      console.error('Error updating user:', error);
+      alert('Failed to update user profile. Please try again.');
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, fetchProfile, logout, verifyEmail, verifyPhone, resendEmailOtp, resendPhoneOtp }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, register, fetchProfile, logout, verifyEmail, verifyPhone, resendEmailOtp, resendPhoneOtp, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

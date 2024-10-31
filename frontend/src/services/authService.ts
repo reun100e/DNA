@@ -21,6 +21,22 @@ export const fetchUserProfile = async (): Promise<AuthUser> => {
   return response.data;
 };
 
+/**
+ * Sends a PATCH request to update the user profile.
+ * @param updatedUser - Object containing the fields to be updated.
+ * @returns Updated user profile or throws an error.
+ */
+export const patchUserProfile = async (updatedUser: Partial<AuthUser>): Promise<AuthUser> => {
+  try {
+    const response = await apiClient.patch('/accounts/me/', updatedUser);
+    return response.data;
+  } catch (error: any) {
+    console.error('Failed to update user profile:', error);
+    // Re-throw error to be handled by the caller (React component)
+    throw error.response?.data || new Error('Something went wrong');
+  }
+};
+
 export const refreshToken = async (): Promise<void> => {
   await apiClient.post('/accounts/users/refresh/')
 };

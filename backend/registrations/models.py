@@ -8,9 +8,16 @@ class Registration(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True)
     is_confirmed = models.BooleanField(default=False)
     confirmation_date = models.DateTimeField(null=True, blank=True)
+    participated = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('user', 'event')
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'event'], name="unique_registration")
+        ]
 
     def __str__(self):
         return f"{self.user.username} registered for {self.event.name}"
+
+    @property
+    def program(self):
+        return self.event.program

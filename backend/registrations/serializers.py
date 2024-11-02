@@ -16,8 +16,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         model = Registration
         fields = ['id', 'user', 'event', 'event_id', 'registration_date', 'is_confirmed', 'confirmation_date']
 
-    def create(self, validated_data):
-        user = self.context['request'].user
-        event = validated_data.get('event')
-        registration, created = Registration.objects.get_or_create(user=user, event=event)
-        return registration
+class EventParticipationSerializer(serializers.ModelSerializer):
+    event_name = serializers.CharField(source='event.name')
+    event_date = serializers.DateTimeField(source='event_date')
+
+    class Meta:
+        model = Registration
+        fields = ['event_name', 'event_date', 'participated']

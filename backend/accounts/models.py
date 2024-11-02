@@ -34,3 +34,16 @@ def set_unique_user_id(sender, instance, **kwargs):
             if not User.objects.filter(dna_id=new_id).exists():
                 instance.dna_id = new_id
                 break
+
+# Signal to ensure is_email_verified and is_phone_verified are reset to False only if email or phone_number has changed.
+@receiver(pre_save, sender=User)
+def reset_verification_on_change(sender, instance, **kwargs):
+    """Reset verification status when email or phone changes."""
+    if instance.pk:
+        old_user = sender.objects.get(pk=instance.pk)
+        if instance.email != old_user.email:
+            instance.is_email_verified = False
+        if instance.phone_number != old_user.phone_number:
+            instance.is_phone_verified = False
+
+#Add profile model with sex, bio, college, etc

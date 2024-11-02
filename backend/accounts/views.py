@@ -2,6 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.exceptions import ValidationError
 from .serializers import UserProfileSerializer, RegisterSerializer, LoginSerializer
 from django.conf import settings
 from django.utils.timezone import now
@@ -9,14 +10,43 @@ from django.utils.timezone import now
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     """
-    This view allows a logged-in user to view or update their own details.
+    View to allow users to retrieve or update their profile.
+    Only specific fields can be updated; others will raise a validation error.
     """
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]  # Only authenticated users can access
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        # Return the logged-in user's data only
+        """
+        Retrieve the logged-in user.
+        """
         return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        """
+        Handle both PUT and PATCH requests with proper validation.
+        """
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        # Validate the incoming data with the serializer
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)  # Raise error if invalid
+
+        # Perform the update and return a 200 OK response
+        self.perform_update(serializer)
+
+        # Return updated data and status code
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def perform_update(self, serializer):
+        """
+        Save the updates only if allowed fields are modified.
+        """
+        if not serializer.validated_data:
+            raise ValidationError({"detail": "No valid fields provided for update."})
+
+        serializer.save()
 
 
 class RegisterView(APIView):

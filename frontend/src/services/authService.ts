@@ -1,5 +1,6 @@
 import apiClient from '../interceptors/authInterceptor';
 import { LoginCredentials, RegisterFormData, AuthUser, VerificationResponse } from '../types/auth.types';
+import { Payment, Event, Award } from '../types/auth.types';
 
 export const registerUser = async (formData: RegisterFormData): Promise<{ data: { user: AuthUser } }> => {
   const response = await apiClient.post('/accounts/users/register/', formData);
@@ -21,11 +22,6 @@ export const fetchUserProfile = async (): Promise<AuthUser> => {
   return response.data;
 };
 
-/**
- * Sends a PATCH request to update the user profile.
- * @param updatedUser - Object containing the fields to be updated.
- * @returns Updated user profile or throws an error.
- */
 export const patchUserProfile = async (updatedUser: Partial<AuthUser>): Promise<AuthUser> => {
   try {
     const response = await apiClient.patch('/accounts/me/', updatedUser);
@@ -64,3 +60,31 @@ export const resendEmailOtp = async (): Promise<void> => {
 export const resendPhoneOtp = async (): Promise<void> => {
   await apiClient.post('/accounts/users/resend-phone-otp/');
 };
+
+// Function to fetch payments
+export const MyPayments = async (): Promise<Payment[]> => {
+  const response = await apiClient.get('/payments/my-payments/');
+  return response.data.results;
+};
+
+// Function to fetch events
+export const MyEvents = async (): Promise<Event[]> => {
+  const response = await apiClient.get('/programs/my-programs/');
+  return response.data.results;
+};
+
+// Function to fetch awards
+export const MyBadges = async (): Promise<Award[]> => {
+  const response = await apiClient.get('/badges/my-badges/');
+  return response.data.results.map((result: { id: string; badge: { name: string; }; awarded_date: string; }) => ({
+    id: result.id,
+    title: result.badge.name,
+    date: result.awarded_date
+  }));
+};
+
+// // Function to fetch prizes
+// export const MyPrizes = async (): Promise<Prize[]> => {
+//   const response = await apiClient.get('/prizes/my-prizes/');
+//   return response.data;
+// };

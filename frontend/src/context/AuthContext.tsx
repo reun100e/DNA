@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthUser, LoginCredentials, RegisterFormData } from '../types/auth.types';
-import { loginUser, registerUser, fetchUserProfile, logoutUser, verifyEmailOtp, verifyPhoneOtp, resendEmailOtp, resendPhoneOtp, patchUserProfile } from '../services/authService';
+import { loginUser, registerUser, fetchUserProfile, logoutUser, verifyEmailOtp, verifyPhoneOtp, resendEmailOtp, resendPhoneOtp, patchUserProfile, MyPayments, MyEvents, MyBadges } from '../services/authService';
 
 interface AuthContextProps {
   user: AuthUser | null;
@@ -15,6 +15,7 @@ interface AuthContextProps {
   resendEmailOtp: () => Promise<void>;
   resendPhoneOtp: () => Promise<void>;
   updateUser: (updatedUser: Partial<AuthUser>) => Promise<void>;
+  fetchAdditionalUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const profile = await fetchUserProfile();
       setUser(profile);
+      fetchAdditionalUserData();
       setIsAuthenticated(true)
     } catch (error) {
       console.error('Failed to fetch user profile', error);
@@ -87,8 +89,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const fetchAdditionalUserData = async () => {
+    try {
+      const [payments, events, awards] = await Promise.allSettled([
+        MyPayments(),
+        MyEvents(),
+        MyBadges()
+      ]);
+
+      setUser(prev => prev ? {
+        ...prev,
+        payments: payments.status === "fulfilled" ? payments.value : [],
+        events: events.status === "fulfilled" ? events.value : [],
+        awards: awards.status === "fulfilled" ? awards.value : [],
+      } : null);
+    } catch (error) {
+      console.error('Failed to fetch additional user data:', error);
+    }
+  };
+
+
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, fetchProfile, logout, verifyEmail, verifyPhone, resendEmailOtp, resendPhoneOtp, updateUser }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, register, fetchProfile, logout, verifyEmail, verifyPhone, resendEmailOtp, resendPhoneOtp, updateUser, fetchAdditionalUserData}}>
       {children}
     </AuthContext.Provider>
   );

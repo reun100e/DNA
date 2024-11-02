@@ -8,6 +8,11 @@ export interface AuthUser {
     is_phone_verified: boolean;
     is_email_verified: boolean;
     dna_id: string;
+    profile_picture: string;
+    payments: Payment[];
+    events: Event[];
+    awards: Award[];
+    prizes: Prize[];
 }
 
 export interface LoginCredentials {
@@ -31,4 +36,30 @@ export interface VerificationResponse {
 export interface VerificationError {
     message: string;
     code?: 'INVALID_OTP' | 'EXPIRED_OTP' | 'TOO_MANY_ATTEMPTS' | 'NETWORK_ERROR';
+}
+
+
+export interface Payment {
+    id: string;
+    date: string;
+    amount: number;
+    method: string;
+}
+
+export interface Event {
+    id: string;
+    name: string;
+    date: string;
+}
+
+export interface Award {
+    id: string;
+    title: string;
+    date: string;
+}
+
+export interface Prize {
+    id: string;
+    name: string;
+    date: string;
 }

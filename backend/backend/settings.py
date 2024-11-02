@@ -1,6 +1,12 @@
 from pathlib import Path
 from django.conf import settings
 
+import environ
+# Initialize environment variables
+env = environ.Env()
+environ.Env.read_env()  # Reads .env file
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -36,6 +42,7 @@ INSTALLED_APPS = [
     "payments",
     "programs",
     "registrations",
+    "verification",
 ]
 
 MIDDLEWARE = [
@@ -131,7 +138,7 @@ CORS_ALLOW_CREDENTIALS = True
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=5),  # Short lifetime for access token
+    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=555),  # Short lifetime for access token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Longer lifetime for refresh token
     'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens on use
     'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old refresh tokens
@@ -172,3 +179,27 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# OTP settings
+OTP_EXPIRATION_MINUTES = 10  # Expire OTPs after 10 minutes
+OTP_RESEND_INTERVAL = 60  # Allow resending OTP after 60 seconds
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env("EMAIL_HOST", default="localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", default=25)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="webmaster@localhost")
+
+# Twilio SMS configuration (for example)
+TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default="")
+TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN", default="")
+TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default="")
+
+# # Placeholder for any other SMS service configuration
+# SMS_PROVIDER_API_KEY = os.getenv("SMS_PROVIDER_API_KEY")
+# SMS_PROVIDER_API_SECRET = os.getenv("SMS_PROVIDER_API_SECRET")
+# SMS_FROM_NUMBER = os.getenv("SMS_FROM_NUMBER", "+1234567890")  # Default sender number

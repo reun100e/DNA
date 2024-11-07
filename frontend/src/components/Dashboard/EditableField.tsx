@@ -1,4 +1,5 @@
 import { useState, FC } from 'react';
+import '../../styles/EditableField.css';
 
 interface EditableFieldProps {
   label: string;
@@ -16,22 +17,23 @@ const EditableField: FC<EditableFieldProps> = ({ label, value, onSave }) => {
   };
 
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <label>{label}</label>
+    <div className="editable-field">
+      <label className="field-label">{label}</label>
       {editMode ? (
-        <div>
-          <input 
-            type="text" 
-            value={inputValue} 
-            onChange={(e) => setInputValue(e.target.value)} 
+        <div className="edit-container">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="edit-input"
           />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={() => setEditMode(false)}>Cancel</button>
+          <button onClick={handleSave} className="save-button">Save</button>
+          <button onClick={() => setEditMode(false)} className="cancel-button">Cancel</button>
         </div>
       ) : (
-        <div>
-          <span>{value}</span>
-          <button onClick={() => setEditMode(true)}>Edit</button>
+        <div className="view-container">
+          <span className="field-value">{value}</span>
+          <button onClick={() => setEditMode(true)} className="edit-button">Edit</button>
         </div>
       )}
     </div>

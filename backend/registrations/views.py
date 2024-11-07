@@ -3,6 +3,7 @@ from .models import Registration
 from .serializers import RegistrationSerializer, EventParticipationSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAdminUser
 from rest_framework import status
 
 class RegistrationCreateView(generics.CreateAPIView):
@@ -12,20 +13,16 @@ class RegistrationCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         event = serializer.validated_data['event']
+        registration_type = serializer.validated_data['registration_type']
 
+        # Check for duplicate registration
         if Registration.objects.filter(user=user, event=event).exists():
             raise serializers.ValidationError("You have already registered for this event.")
+
+        # Save the registration with user
         serializer.save(user=user)
 
 class RegistrationListView(generics.ListAPIView):
-    serializer_class = RegistrationSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Registration.objects.filter(user=self.request.user)
-
-
-class RegisteredEventListView(generics.ListAPIView):
     serializer_class = RegistrationSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -49,3 +46,11 @@ def user_event_participation(request, user_id):
     registrations = Registration.objects.filter(user_id=user_id)
     serializer = EventParticipationSerializer(registrations, many=True)
     return Response(serializer.data)
+
+
+class AdminRegistrationListView(generics.ListAPIView):
+    serializer_class = RegistrationSerializer
+    permission_classes = [IsAdminUser]  # Only admins can access this view
+
+    def get_queryset(self):
+        return Registration.objects.all()  # List all registrations for all users

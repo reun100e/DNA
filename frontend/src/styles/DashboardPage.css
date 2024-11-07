@@ -1,0 +1,66 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+justify-content: space-around;
+  max-width: 800px;
+
+}
+
+.redirect-message {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+.profile-section {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+.program,
+.award,
+.prize {
+  background-color: #c5dbfb;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.event {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.event h4 {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+.event-date,
+.award-date,
+.prize-date {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+
+/* Mobile Menu */
+@media (max-width: 768px) {
+  .profile-section {
+    flex-direction: column;
+  }
+}

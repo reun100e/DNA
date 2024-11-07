@@ -1,4 +1,5 @@
 import { FC, useState, ChangeEvent } from 'react';
+import '../../styles/ProfilePictureUpload.css';
 
 interface ProfilePictureUploadProps {
   profilePicture: string;
@@ -20,13 +21,9 @@ const ProfilePictureUpload: FC<ProfilePictureUploadProps> = ({
   };
 
   return (
-    <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-      <img
-        src={preview}
-        alt="Profile"
-        style={{ width: '150px', height: '150px', borderRadius: '50%' }}
-      />
-      <input type="file" onChange={handleFileChange} />
+    <div className="profile-picture-upload">
+      <img src={preview} alt="Profile" className="profile-picture" />
+      <input type="file" onChange={handleFileChange} className="upload-input" />
     </div>
   );
 };

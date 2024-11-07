@@ -1,0 +1,36 @@
+.editable-field {
+  margin-bottom: 1.5rem;
+}
+
+.field-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.view-container,
+.edit-container {
+  display: flex;
+  align-items: center;
+}
+
+.field-value {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 3px;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+}

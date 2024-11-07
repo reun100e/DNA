@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AppRouter } from "./routes/AppRouter";
+import AppRoutes from "./routes/AppRoutes";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar/Navbar";
-import "./styles/App.css";
 import { setupAuthInterceptor } from "./interceptors/authInterceptor";
+import "./styles/App.css";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -15,7 +15,7 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <Navbar />
-        <AppRouter />
+        <AppRoutes />
       </AuthProvider>
     </Router>
   );

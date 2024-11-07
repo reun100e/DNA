@@ -13,7 +13,7 @@ class User(AbstractUser):
     is_phone_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
 
-    dna_id = models.CharField(max_length=20, unique=True, blank=True, editable=False)
+    dna_id = models.CharField(max_length=20, unique=True, blank=True, editable=False, help_text="Unique DNA identifier.")
 
     def __str__(self):
         return self.username

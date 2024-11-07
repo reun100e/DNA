@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { refreshToken } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
+import { isRefreshing, failedQueue, setRefreshing, resetRefreshState } from '../utils/refreshUtils';
 
 // Create the axios instance for your API client
 const apiClient = axios.create({
@@ -9,22 +10,19 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Track retry attempts to avoid infinite loops
-let isRefreshing = false;
-let failedQueue: { resolve: (value?: any) => void; reject: (reason?: any) => void }[] = [];
-
 // Function to process queued requests waiting for a new token
-const processQueue = (error: any, tokenAvailable: boolean) => {
+const processQueue = (error: any, refreshSuccess: boolean) => {
   failedQueue.forEach(({ resolve, reject }) => {
-    if (tokenAvailable) {
-      resolve(apiClient(error.config)); // Retry with original config
+    if (refreshSuccess) {
+      // Retry the original request if refresh was successful
+      resolve(apiClient(error.config));
     } else {
-      reject(error); // Reject if refresh failed
+      // Reject the request if refresh failed
+      reject(error);
     }
   });
-  failedQueue = []; // Clear the queue
+  resetRefreshState(); // Clear the queue and reset refresh state
 };
-
 
 export const setupAuthInterceptor = () => {
   apiClient.interceptors.response.use(
@@ -32,36 +30,42 @@ export const setupAuthInterceptor = () => {
     async (error) => {
       const originalRequest = error.config;
 
-      // Handle 401 Unauthorized errors only if the original request is not retrying
+      // Check for 401 error and ensure the request hasn't been retried yet
       if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
+        originalRequest._retry = true; // Prevent infinite retry loops
 
+        // If no other refresh is in progress, start a new refresh
         if (!isRefreshing) {
-          isRefreshing = true; // Avoid multiple refresh calls
+          setRefreshing(true);
 
           try {
-            await refreshToken(); // Try refreshing the token
-            isRefreshing = false;
-            processQueue(null, true); // Process queued requests
+            // Attempt to refresh the token
+            await refreshToken();
+            processQueue(null, true); // Process queued requests as successful
             return apiClient(originalRequest); // Retry the original request
           } catch (refreshError) {
-            isRefreshing = false;
-            processQueue(refreshError, false); // Reject queued requests
-            const { logout } = useAuth(); // Logout on refresh failure
-            logout(); // Clear user state and redirect
+            const { logout } = useAuth();
+            logout(); // Log out the user on refresh failure
+            processQueue(refreshError, false); // Reject queued requests on failure
             return Promise.reject(refreshError);
+          } finally {
+            setRefreshing(false); // Reset refreshing state
           }
         }
 
-        // If another refresh is already in progress, queue the request
+        // If a refresh is already in progress, queue this request
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         });
       }
 
-      return Promise.reject(error); // Handle other non-401 errors normally
+      // Handle non-401 errors normally
+      return Promise.reject(error);
     }
   );
 };
 
 export default apiClient;
+
+
+

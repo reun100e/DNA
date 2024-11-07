@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-
-export const HomePage = () => {
+const HomePage = () => {
   const navigate = useNavigate();
 
   const events = [
@@ -10,7 +9,7 @@ export const HomePage = () => {
   ];
 
   const handleClick = () => {
-      navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   const handleRegisterClick = (eventId: string) => {
@@ -34,3 +33,5 @@ export const HomePage = () => {
     </div>
   );
 };
+
+export default HomePage;

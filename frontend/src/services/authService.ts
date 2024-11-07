@@ -1,7 +1,5 @@
 import apiClient from '../interceptors/authInterceptor';
-import { LoginCredentials, RegisterFormData, AuthUser, VerificationResponse } from '../types/auth.types';
-import { Payment, Event, Award } from '../types/auth.types';
-
+import { LoginCredentials, RegisterFormData, AuthUser, VerificationResponse, Payment,Program, Badge } from '../types/auth.types';
 export const registerUser = async (formData: RegisterFormData): Promise<{ data: { user: AuthUser } }> => {
   const response = await apiClient.post('/accounts/users/register/', formData);
   return response.data;
@@ -67,14 +65,14 @@ export const MyPayments = async (): Promise<Payment[]> => {
   return response.data.results;
 };
 
-// Function to fetch events
-export const MyEvents = async (): Promise<Event[]> => {
+// Function to fetch programs
+export const MyPrograms = async (): Promise<Program[]> => {
   const response = await apiClient.get('/programs/my-programs/');
   return response.data.results;
 };
 
-// Function to fetch awards
-export const MyBadges = async (): Promise<Award[]> => {
+// Function to fetch badges
+export const MyBadges = async (): Promise<Badge[]> => {
   const response = await apiClient.get('/badges/my-badges/');
   return response.data.results.map((result: { id: string; badge: { name: string; }; awarded_date: string; }) => ({
     id: result.id,

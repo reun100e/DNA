@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "programs",
     "registrations",
     "verification",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -115,7 +116,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.UserRateThrottle",],
-    "DEFAULT_THROTTLE_RATES": {"user": "60/minute",},
+    "DEFAULT_THROTTLE_RATES": {"user": "160/minute",},
 }
 
 # SESSION_COOKIE_SAMESITE = 'None'  # Required for cross-site requests
@@ -203,3 +204,17 @@ TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default="")
 # SMS_PROVIDER_API_KEY = os.getenv("SMS_PROVIDER_API_KEY")
 # SMS_PROVIDER_API_SECRET = os.getenv("SMS_PROVIDER_API_SECRET")
 # SMS_FROM_NUMBER = os.getenv("SMS_FROM_NUMBER", "+1234567890")  # Default sender number
+
+
+RAZORPAY_KEY_ID = "your_key_id"
+RAZORPAY_KEY_SECRET = "your_key_secret"
+
+
+# # settings.py
+# import redis
+
+# REDIS_HOST = 'localhost'
+# REDIS_PORT = 6379
+# REDIS_DB = 0  # Use a dedicated database for blacklisting if desired
+
+# redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)

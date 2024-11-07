@@ -10,9 +10,8 @@ export interface AuthUser {
     dna_id: string;
     profile_picture: string;
     payments: Payment[];
-    events: Event[];
-    awards: Award[];
-    prizes: Prize[];
+    programs: Program[];
+    badges: Badge[];
 }
 
 export interface LoginCredentials {
@@ -46,13 +45,21 @@ export interface Payment {
     method: string;
 }
 
+export interface Program {
+    id: string;
+    name: string;
+    description: string;
+    events: Event[];
+}
+
 export interface Event {
     id: string;
     name: string;
-    date: string;
+    description: string;
+    event_date: string;
 }
 
-export interface Award {
+export interface Badge {
     id: string;
     title: string;
     date: string;
@@ -63,3 +70,8 @@ export interface Prize {
     name: string;
     date: string;
 }
+
+export interface RegisterEventData {
+    event_id: number;
+    registration_type: number;
+  }

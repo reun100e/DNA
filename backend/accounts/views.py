@@ -149,28 +149,30 @@ class RefreshTokenView(APIView):
         return response
 
 
+# from backend.settings import redis_client  # Import the Redis client configured in settings
+
 class LogoutView(APIView):
     def post(self, request):
         try:
+            # Blacklist the refresh token
             refresh_token = request.COOKIES.get('refresh')
-            token = RefreshToken(refresh_token)
-            token.blacklist() # Blacklist the token
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+
+            # # Blacklist the access token temporarily
+            # access_token = request.COOKIES.get('access')
+            # if access_token:
+            #     token_id = access_token.split('.')[2]  # Assuming JWT format: header.payload.signature
+            #     ttl = 10  # Set TTL to 10 seconds (or less depending on your access token's lifespan)
+            #     redis_client.setex(f"blacklisted_{token_id}", ttl, "blacklisted")
+
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Clear cookies
         response = Response({"detail": "Logged out"}, status=status.HTTP_200_OK)
         response.delete_cookie('access')
         response.delete_cookie('refresh')
-        request.session.flush() # Logs the user out and clears session data
+        request.session.flush()
         return response
-
-class VerifyEmailView(APIView):
-    permission_classes = [IsAuthenticated]
-    def post(self, request):
-        return Response({"message": "Email Verified"}, status=status.HTTP_200_OK)
-
-
-class VerifyPhoneView(APIView):
-    permission_classes = [IsAuthenticated]
-    def post(self, request):
-        return Response({"message": "Phone Verified"}, status=status.HTTP_200_OK)

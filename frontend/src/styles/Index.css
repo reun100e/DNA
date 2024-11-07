@@ -25,12 +25,13 @@ img {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-
   background: linear-gradient(to bottom right, #17137c, #0c53a5);
-  height: 100vh;
-  overflow-x: hidden;
+}
+
+.app-body {
+  padding-top: 5.5rem;
+  display: flex;
+  justify-content: space-around;
 }

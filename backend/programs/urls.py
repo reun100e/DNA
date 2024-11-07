@@ -10,6 +10,6 @@ urlpatterns = [
 
     # User-registered program and events list
     path('my-programs/', UserProgramsView.as_view(), name='my-programs'),
-    # Admin vie of all user-registered program and events list
+    # Admin view of all user-registered program and events list
     path('admin-programs/', AdminProgramsView.as_view(), name='admin-programs'),
 ]

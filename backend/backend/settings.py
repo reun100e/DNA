@@ -1,7 +1,9 @@
 from pathlib import Path
 from django.conf import settings
+import os
 
 import environ
+
 # Initialize environment variables
 env = environ.Env()
 environ.Env.read_env()  # Reads .env file
@@ -15,12 +17,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-d%yqks07=#3-jhokv2eup^4zbthn3*h_p&(6538i)1g*_fs=*7"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,9 +39,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "accounts",
-    "badges",
-    "history",
-    "payments",
     "programs",
     "registrations",
     "verification",
@@ -49,11 +48,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "accounts.middleware.CookieToHeaderMiddleware",
+    # "accounts.middleware.AutoRegisterEventMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -111,12 +111,18 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "accounts.User"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
-    "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.UserRateThrottle",],
-    "DEFAULT_THROTTLE_RATES": {"user": "160/minute",},
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "160/minute",
+    },
 }
 
 # SESSION_COOKIE_SAMESITE = 'None'  # Required for cross-site requests
@@ -125,11 +131,11 @@ REST_FRAMEWORK = {
 # CSRF_COOKIE_SAMESITE = 'None'
 
 # SESSION_COOKIE_SECURE = False # change in production
-# CSRF_COOKIE_SECURE = False # change in production
+CSRF_COOKIE_SECURE = True # change in production
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "https://dev.onthewifi.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
@@ -139,19 +145,18 @@ CORS_ALLOW_CREDENTIALS = True
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=555),  # Short lifetime for access token
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Longer lifetime for refresh token
-    'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens on use
-    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old refresh tokens
-    'AUTH_COOKIE': 'access',  # Ensure this matches your cookie setup
-    'AUTH_COOKIE_REFRESH': 'refresh',
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': settings.SECRET_KEY,
-
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=555),  # Short lifetime for access token
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # Longer lifetime for refresh token
+    "ROTATE_REFRESH_TOKENS": True,  # Rotate refresh tokens on use
+    "BLACKLIST_AFTER_ROTATION": True,  # Blacklist old refresh tokens
+    "AUTH_COOKIE": "access",  # Ensure this matches your cookie setup
+    "AUTH_COOKIE_REFRESH": "refresh",
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": settings.SECRET_KEY,
     # 'AUTH_COOKIE_SECURE': True,     # Secure flag for HTTPS
-    'AUTH_COOKIE_HTTP_ONLY': True,  # HTTP-only flag
-    'AUTH_COOKIE_SAMESITE': 'None',  # Important for cross-origin requests
-    'AUTH_COOKIE_PATH': '/',        # Ensure it's available to the entire app
+    "AUTH_COOKIE_HTTP_ONLY": True,  # HTTP-only flag
+    "AUTH_COOKIE_SAMESITE": "None",  # Important for cross-origin requests
+    "AUTH_COOKIE_PATH": "/",  # Ensure it's available to the entire app
 }
 
 
@@ -176,6 +181,16 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Define separate directories for public and private media
+PUBLIC_MEDIA_ROOT = os.path.join(MEDIA_ROOT, 'public')
+PRIVATE_MEDIA_ROOT = os.path.join(MEDIA_ROOT, 'private')
+PUBLIC_MEDIA_URL = '/media/public/'
+PRIVATE_MEDIA_URL = '/media/private/'  # Not served directly
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -187,7 +202,7 @@ OTP_EXPIRATION_MINUTES = 10  # Expire OTPs after 10 minutes
 OTP_RESEND_INTERVAL = 60  # Allow resending OTP after 60 seconds
 
 # Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env("EMAIL_HOST", default="localhost")
 EMAIL_PORT = env.int("EMAIL_PORT", default=25)
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)

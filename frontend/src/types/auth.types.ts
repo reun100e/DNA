@@ -9,10 +9,9 @@ export interface AuthUser {
     is_email_verified: boolean;
     dna_id: string;
     profile_picture: string;
-    payments: Payment[];
-    programs: Program[];
-    badges: Badge[];
+    bio: string | null;
 }
+
 
 export interface LoginCredentials {
     username: string;
@@ -28,50 +27,8 @@ export interface RegisterFormData {
     phone_number: string;
 }
 
-export interface VerificationResponse {
-    message: string;
-}
-
 export interface VerificationError {
     message: string;
     code?: 'INVALID_OTP' | 'EXPIRED_OTP' | 'TOO_MANY_ATTEMPTS' | 'NETWORK_ERROR';
 }
 
-
-export interface Payment {
-    id: string;
-    date: string;
-    amount: number;
-    method: string;
-}
-
-export interface Program {
-    id: string;
-    name: string;
-    description: string;
-    events: Event[];
-}
-
-export interface Event {
-    id: string;
-    name: string;
-    description: string;
-    event_date: string;
-}
-
-export interface Badge {
-    id: string;
-    title: string;
-    date: string;
-}
-
-export interface Prize {
-    id: string;
-    name: string;
-    date: string;
-}
-
-export interface RegisterEventData {
-    event_id: number;
-    registration_type: number;
-  }

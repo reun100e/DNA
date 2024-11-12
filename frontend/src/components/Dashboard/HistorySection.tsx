@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import '../../styles/HistorySection.css';
 
 interface HistorySectionProps {
   title: string;

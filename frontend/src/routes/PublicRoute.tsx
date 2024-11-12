@@ -4,9 +4,6 @@ import { isRefreshing } from "../utils/refreshUtils";
 
 const PublicRoute = () => {
   const { isAuthenticated } = useAuth();
-  // console.log(isAuthenticated)
-  console.log(isRefreshing);
-  console.log();
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;

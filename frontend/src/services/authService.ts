@@ -1,7 +1,11 @@
 import apiClient from '../interceptors/authInterceptor';
-import { LoginCredentials, RegisterFormData, AuthUser, VerificationResponse, Payment,Program, Badge } from '../types/auth.types';
+import { LoginCredentials, RegisterFormData, AuthUser} from '../types/auth.types';
+
 export const registerUser = async (formData: RegisterFormData): Promise<{ data: { user: AuthUser } }> => {
   const response = await apiClient.post('/accounts/users/register/', formData);
+  if (response.data.redirect_url) {
+    window.location.href = response.data.redirect_url;  // Navigate to the redirect URL
+  }
   return response.data;
 };
 
@@ -15,14 +19,30 @@ export const logoutUser = async (): Promise<{ data: { user: AuthUser } }> => {
   return response.data;
 };
 
-export const fetchUserProfile = async (): Promise<AuthUser> => {
-  const response = await apiClient.get('/accounts/me/');
+export const fetchUserMe = async (): Promise<AuthUser> => {
+  const response = await apiClient.get('/accounts/users/me/');
   return response.data;
+};
+
+export const refreshToken = async (): Promise<void> => {
+  await apiClient.post('/accounts/users/refresh/')
+};
+
+
+export const fetchUserProfile = async (): Promise<AuthUser> => {
+  try {
+    const response = await apiClient.get('/accounts/users/profile/');
+    return response.data;
+  } catch (error: any) {
+    console.error('Failed to get user profile:', error);
+    // Re-throw error to be handled by the caller (React component)
+    throw error.response?.data || new Error('Something went wrong');
+  }
 };
 
 export const patchUserProfile = async (updatedUser: Partial<AuthUser>): Promise<AuthUser> => {
   try {
-    const response = await apiClient.patch('/accounts/me/', updatedUser);
+    const response = await apiClient.patch('/accounts/users/profile/', updatedUser);
     return response.data;
   } catch (error: any) {
     console.error('Failed to update user profile:', error);
@@ -31,55 +51,29 @@ export const patchUserProfile = async (updatedUser: Partial<AuthUser>): Promise<
   }
 };
 
-export const refreshToken = async (): Promise<void> => {
-  await apiClient.post('/accounts/users/refresh/')
-};
+// export const uploadProfilePicture = async (file: File): Promise<string> => {
+//   try {
+//     const formData = new FormData();
+//     formData.append("profile_picture", file);
 
-export const verifyEmailOtp = async (otp: string): Promise<VerificationResponse> => {
-  const response = await apiClient.post<VerificationResponse>(
-    '/accounts/users/verify-email/',
-    { otp }
-  );
-  return response.data;
-};
+//     const response = await apiClient.patch('/accounts/users/profile/', formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     });
 
-export const verifyPhoneOtp = async (otp: string): Promise<VerificationResponse> => {
-  const response = await apiClient.post<VerificationResponse>(
-    '/accounts/users/verify-phone/',
-    { otp }
-  );
-  return response.data;
-};
+//     // Assuming the server response includes the updated profile picture URL
+//     return response.data.profile_picture;
+//   } catch (error: any) {
+//     console.error("Failed to upload profile picture:", error);
+//     throw error.response?.data || new Error("Something went wrong");
+//   }
+// };
 
-export const resendEmailOtp = async (): Promise<void> => {
-  await apiClient.post('/accounts/users/resend-email-otp/')
-};
 
-export const resendPhoneOtp = async (): Promise<void> => {
-  await apiClient.post('/accounts/users/resend-phone-otp/');
-};
 
-// Function to fetch payments
-export const MyPayments = async (): Promise<Payment[]> => {
-  const response = await apiClient.get('/payments/my-payments/');
-  return response.data.results;
-};
 
-// Function to fetch programs
-export const MyPrograms = async (): Promise<Program[]> => {
-  const response = await apiClient.get('/programs/my-programs/');
-  return response.data.results;
-};
 
-// Function to fetch badges
-export const MyBadges = async (): Promise<Badge[]> => {
-  const response = await apiClient.get('/badges/my-badges/');
-  return response.data.results.map((result: { id: string; badge: { name: string; }; awarded_date: string; }) => ({
-    id: result.id,
-    title: result.badge.name,
-    date: result.awarded_date
-  }));
-};
 
 // // Function to fetch prizes
 // export const MyPrizes = async (): Promise<Prize[]> => {

@@ -1,4 +1,3 @@
-// OtpInput.tsx
 import React, { useRef } from 'react';
 
 interface OtpInputProps {
@@ -18,7 +17,6 @@ export const OtpInput: React.FC<OtpInputProps> = ({
     const newValue = [...value];
     newValue[index] = e.target.value.replace(/\D/g, '');
 
-    // Automatically move to the next input
     if (e.target.value && index < value.length - 1) {
       inputsRef.current[index + 1]?.focus();
     }
@@ -26,13 +24,27 @@ export const OtpInput: React.FC<OtpInputProps> = ({
     onChange(newValue);
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    // Handle backspace to move focus to the previous field
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === 'Backspace' && !value[index] && index > 0) {
       inputsRef.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text').slice(0, value.length).replace(/\D/g, '');
+    const newValue = [...value];
+
+    pasteData.split('').forEach((char, i) => {
+      newValue[i] = char;
+      if (inputsRef.current[i]) {
+        inputsRef.current[i].value = char;
+      }
+    });
+
+    onChange(newValue);
+    if (inputsRef.current[pasteData.length - 1]) {
+      inputsRef.current[pasteData.length - 1].focus();
     }
   };
 
@@ -48,9 +60,10 @@ export const OtpInput: React.FC<OtpInputProps> = ({
           value={digit}
           onChange={(e) => handleChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
+          onPaste={handlePaste}
           ref={(el) => (inputsRef.current[index] = el!)}
           disabled={disabled}
-          className="w-12 h-12 text-center border rounded-md text-2xl"
+          className="w-12 h-12 text-center border rounded-md  text-2xl bg-primary-foreground"
           aria-label={`OTP digit ${index + 1}`}
         />
       ))}

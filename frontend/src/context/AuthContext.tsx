@@ -1,11 +1,10 @@
-// src/context/AuthContext.tsx
-
 import {
   createContext,
   useState,
   useEffect,
   ReactNode,
   useContext,
+  useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,37 +13,26 @@ import {
   RegisterFormData,
 } from "../types/auth.types";
 import {
-  loginUser,
   registerUser,
-  fetchUserProfile,
+  loginUser,
   logoutUser,
-  verifyEmailOtp,
-  verifyPhoneOtp,
-  resendEmailOtp,
-  resendPhoneOtp,
+  fetchUserMe,
+  fetchUserProfile,
   patchUserProfile,
-  MyPayments,
-  MyPrograms,
-  MyBadges,
 } from "../services/authService";
 import { resetRefreshState } from "../utils/refreshUtils";
-import { registerForEvent } from "../services/eventService";
-import { RegisterEventData } from "../types/auth.types";
 
 interface AuthContextProps {
   user: AuthUser | null;
   isAuthenticated: boolean;
+  loading: boolean; // New loading state
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (formData: RegisterFormData) => Promise<void>;
   logout: () => void;
-  verifyEmail: (otp: string) => Promise<void>;
-  verifyPhone: (otp: string) => Promise<void>;
-  fetchProfile: () => Promise<void>;
-  resendEmailOtp: () => Promise<void>;
-  resendPhoneOtp: () => Promise<void>;
+  fetchUser: () => Promise<void>;
+  fetchUserProfile: () => Promise<AuthUser>;
   updateUser: (updatedUser: Partial<AuthUser>) => Promise<void>;
-  fetchAdditionalUserData: () => Promise<void>;
-  registerForEvent: (data: RegisterEventData) => Promise<void>;
+  baseUrl: string;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -52,72 +40,78 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // Initialize loading to true
   const navigate = useNavigate();
 
   useEffect(() => {
     const fingerprint = localStorage.getItem("fingerprint");
-    if (fingerprint) fetchProfile();
-  }, [isAuthenticated]);
-  // fetchProfile();
-  // fetchProfile().catch(() => logout()); // Logout on failure to fetch latest user data on app load.
+    if (fingerprint) {
+      fetchUser();
+    } else {
+      setLoading(false); // If no fingerprint, stop loading
+      logout();
+    }
+  }, []);
 
-  const fetchProfile = async () => {
+  const fetchUser = async () => {
     try {
-      const profile = await fetchUserProfile();
-      if (profile !== null) {
-        setUser(profile);
-        // await fetchAdditionalUserData();
+      const me = await fetchUserMe();
+      if (me !== null) {
+        setUser(me);
         setIsAuthenticated(true);
         localStorage.setItem("fingerprint", "true");
+      } else {
+        setIsAuthenticated(false);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
-        // Handle unauthorized error by setting isAuthenticated to false
         setIsAuthenticated(false);
         console.log("User is not authenticated");
+        logout();
       } else {
         console.error("Failed to fetch user profile", error);
+        logout();
       }
+    } finally {
+      setLoading(false); // Set loading to false once the authentication check is done
     }
   };
 
   const login = async (credentials: LoginCredentials) => {
-    const { data } = await loginUser(credentials);
-    const userData = data.user;
-    setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem("fingerprint", "true");
-    navigate("/");
+    try {
+      const { data } = await loginUser(credentials);
+      const userData = data.user;
+      setUser(userData);
+      setIsAuthenticated(true);
+      localStorage.setItem("fingerprint", "true");
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw new Error("Login failed. Please check your credentials.");
+    }
   };
 
   const register = async (formData: RegisterFormData) => {
-    await registerUser(formData);
-    navigate("/verify");
+    try {
+      await registerUser(formData);
+      navigate("/verify");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      alert("Registration failed. Please try again.");
+    }
   };
 
   const logout = async () => {
     try {
-      await logoutUser(); // Ensure backend logs out the user
-    } catch (error) {
-      console.error("Error during logout:", error);
-    } finally {
-      // Clear user data and reset authentication state
       setUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem("fingerprint");
-      resetRefreshState(); // Clear any pending requests and reset refresh state
+      resetRefreshState();
+      await logoutUser();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    } finally {
       navigate("/");
     }
-  };
-
-  const verifyEmail = async (otp: string) => {
-    await verifyEmailOtp(otp);
-    setUser((prev) => ({ ...prev!, is_email_verified: true }));
-  };
-
-  const verifyPhone = async (otp: string) => {
-    await verifyPhoneOtp(otp);
-    setUser((prev) => ({ ...prev!, is_phone_verified: true }));
   };
 
   const updateUser = async (updatedUser: Partial<AuthUser>) => {
@@ -130,54 +124,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const fetchAdditionalUserData = async () => {
-    try {
-      const [payments, programs, badges] = await Promise.allSettled([
-        MyPayments(),
-        MyPrograms(),
-        MyBadges(),
-      ]);
-      if (programs.status === "fulfilled") {
-        console.log("My Events:", programs.value);
-      } else {
-        console.error("Error fetching events:", programs.reason);
-      }
+  const handleFetchUserProfile = useCallback(async () => {
+    const userProfile = await fetchUserProfile();
+    setUser(userProfile);
+    return userProfile;
+  }, []);
 
-      setUser((prev) =>
-        prev
-          ? {
-              ...prev,
-              payments: payments.status === "fulfilled" ? payments.value : [],
-              programs: programs.status === "fulfilled" ? programs.value : [],
-              badges: badges.status === "fulfilled" ? badges.value : [],
-            }
-          : null
-      );
-    } catch (error) {
-      console.error("Failed to fetch additional user data:", error);
-    }
-  };
-
-  const registerForEvent = async (data: RegisterEventData) => {
-    await registerForEvent(data);
-  };
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated,
+        loading,
         login,
         register,
-        fetchProfile,
+        fetchUser,
         logout,
-        verifyEmail,
-        verifyPhone,
-        resendEmailOtp,
-        resendPhoneOtp,
         updateUser,
-        fetchAdditionalUserData,
-        registerForEvent
+        baseUrl,
+        fetchUserProfile: handleFetchUserProfile,
       }}
     >
       {children}

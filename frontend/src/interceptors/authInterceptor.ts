@@ -3,10 +3,12 @@ import { refreshToken } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
 import { isRefreshing, failedQueue, setRefreshing, resetRefreshState } from '../utils/refreshUtils';
 
+const apiUrl = `${import.meta.env.VITE_BACKEND_URL}${import.meta.env.VITE_API_URL}`;
+
 // Create the axios instance for your API client
 const apiClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1', // Adjust the base URL accordingly
-  withCredentials: true, // Ensure HttpOnly cookies are sent with requests
+  baseURL: apiUrl || 'http://127.0.0.1:8000/api/v1',
+  withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 });
 

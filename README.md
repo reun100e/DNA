@@ -1,10 +1,11 @@
-# DNA: Doctors Nexus Amity
+# DNA: Doctors Nexus Amity Web app
+The Official repo of DNA web app designed and developed by Dr. Aghosh
 
-## Official repo of DNA web app
-Authentication - JWT Http-only cookie
-Design System - 2 Tier
+## Features
+- Authentication: JWT Http-only cookie
+- Design System: 2 Tier
 
-### Frontend - React Ts Vite with Shadcn components
+## Frontend - React Ts Vite with Shadcn components
 
 <img src="assets/sm_1.png" alt="Image 1" width="200"/><img src="assets/sm_2.png" alt="Image 1" width="200"/>
 <img src="assets/sm_3.png" alt="Image 1" width="200"/><img src="assets/sm_5.png" alt="Image 1" width="200"/>
@@ -13,7 +14,7 @@ Design System - 2 Tier
 <img src="assets/md_2.png" alt="Image 1" width="800"/>
 
 
-### Backend - Django
+## Backend - Django
 
-#### Schema of the backend:
+### Schema of the backend:
 <img src="assets/models.png" alt="Image 1" width="800"/>

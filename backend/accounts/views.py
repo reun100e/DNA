@@ -3,17 +3,29 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import ValidationError
-from .serializers import UserProfileSerializer, RegisterSerializer, LoginSerializer
+from .serializers import UserDetailSerializer, RegisterSerializer, LoginSerializer
 from django.conf import settings
 from django.utils.timezone import now
+from .serializers import BasicUserSerializer
 
 
-class UserProfileView(generics.RetrieveUpdateAPIView):
+class WhoAmIView(APIView):
+    serializer_class = BasicUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Serialize the current user
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data)
+
+
+class UserDetailView(generics.RetrieveUpdateAPIView):
     """
     View to allow users to retrieve or update their profile.
     Only specific fields can be updated; others will raise a validation error.
     """
-    serializer_class = UserProfileSerializer
+
+    serializer_class = UserDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -26,7 +38,7 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         """
         Handle both PUT and PATCH requests with proper validation.
         """
-        partial = kwargs.pop('partial', False)
+        partial = kwargs.pop("partial", False)
         instance = self.get_object()
 
         # Validate the incoming data with the serializer
@@ -55,7 +67,7 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save()  
             return Response(
                 {"message": "User registered successfully"},
                 status=status.HTTP_201_CREATED,
@@ -64,7 +76,6 @@ class RegisterView(APIView):
 
 
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import BasicUserSerializer
 
 
 class LoginView(APIView):
@@ -79,9 +90,19 @@ class LoginView(APIView):
             )  # Call the serializer's create() method to return tokens
 
             response = Response(
-                {"status": "success",  "message": "Login successful", "data": {"user": BasicUserSerializer(user).data}, "timestamp": now().isoformat()},
+                {
+                    "status": "success",
+                    "message": "Login successful",
+                    "data": {"user": BasicUserSerializer(user).data},
+                    "timestamp": now().isoformat(),
+                },
                 status=status.HTTP_200_OK,
             )
+
+            # # Store event_id in session if it's passed as a query parameter
+            # event_id = request.query_params.get('event_id')
+            # if event_id:
+            #     request.session['event_id'] = event_id
 
             # Set access and refresh tokens as cookies
             self.set_auth_cookies(response, tokens)
@@ -91,25 +112,25 @@ class LoginView(APIView):
     @staticmethod
     def set_auth_cookies(response, tokens):
         """Set access and refresh tokens as HttpOnly cookies."""
-        access_token = tokens.get('access')
-        refresh_token = tokens.get('refresh')
+        access_token = tokens.get("access")
+        refresh_token = tokens.get("refresh")
 
         response.set_cookie(
-            key='access',
+            key="access",
             value=access_token,
             httponly=True,
             secure=settings.SECURE_COOKIES,
-            samesite='None',
-            max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
+            samesite="None",
+            max_age=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds(),
         )
 
         response.set_cookie(
-            key='refresh',
+            key="refresh",
             value=refresh_token,
             httponly=True,
             secure=settings.SECURE_COOKIES,
-            samesite='None',
-            max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds()
+            samesite="None",
+            max_age=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds(),
         )
 
 
@@ -131,9 +152,7 @@ class RefreshTokenView(APIView):
             refresh = RefreshToken(refresh_token)
             new_access_token = str(refresh.access_token)
         except TokenError as e:
-            return Response(
-                {"detail": str(e)}, status=status.HTTP_401_UNAUTHORIZED
-            )
+            return Response({"detail": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
         response = Response(
             {"detail": "Access token refreshed"}, status=status.HTTP_200_OK
@@ -144,19 +163,22 @@ class RefreshTokenView(APIView):
             httponly=True,
             secure=settings.SECURE_COOKIES,  # Use secure=True in production
             samesite="None",
-            max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds(),  # Set from SIMPLE_JWT settings
+            max_age=settings.SIMPLE_JWT[
+                "ACCESS_TOKEN_LIFETIME"
+            ].total_seconds(),  # Set from SIMPLE_JWT settings
         )
         return response
 
 
 # from backend.settings import redis_client  # Import the Redis client configured in settings
 
+
 class LogoutView(APIView):
     def post(self, request):
-        try:
-            # Blacklist the refresh token
-            refresh_token = request.COOKIES.get('refresh')
-            if refresh_token:
+        # Blacklist the refresh token
+        refresh_token = request.COOKIES.get("refresh")
+        if refresh_token:
+            try:
                 token = RefreshToken(refresh_token)
                 token.blacklist()
 
@@ -167,12 +189,33 @@ class LogoutView(APIView):
             #     ttl = 10  # Set TTL to 10 seconds (or less depending on your access token's lifespan)
             #     redis_client.setex(f"blacklisted_{token_id}", ttl, "blacklisted")
 
-        except Exception as e:
-            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         # Clear cookies
         response = Response({"detail": "Logged out"}, status=status.HTTP_200_OK)
-        response.delete_cookie('access')
-        response.delete_cookie('refresh')
+        response.delete_cookie("access")
+        response.delete_cookie("refresh")
         request.session.flush()
         return response
+
+
+from django.conf import settings
+from django.http import FileResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile  # Assuming the media is linked to a UserProfile model
+import os
+
+
+@login_required
+def private_media(request, file_path):
+    user = request.user
+    profile = get_object_or_404(UserProfile, user=user)
+
+    # Check if the requested file is the user's private picture
+    if file_path != profile.profile_picture.name:
+        return HttpResponseForbidden("You do not have permission to access this file.")
+
+    file_full_path = os.path.join(settings.PRIVATE_MEDIA_ROOT, file_path)
+    return FileResponse(open(file_full_path, "rb"))

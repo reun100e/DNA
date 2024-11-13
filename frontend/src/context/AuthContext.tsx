@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       fetchUser();
     } else {
       setLoading(false); // If no fingerprint, stop loading
-      logout();
     }
   }, []);
 

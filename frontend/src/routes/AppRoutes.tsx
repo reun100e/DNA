@@ -32,6 +32,7 @@ const pageTransition = {
 export const AppRoutes = () => {
   const location = useLocation();
   const scrollPositions = useRef(new Map());
+  const prevLocationKey = useRef(location.key); // Track previous location key
 
   useEffect(() => {
     // Save the scroll position when the route changes
@@ -41,14 +42,23 @@ export const AppRoutes = () => {
   }, [location]);
 
   useEffect(() => {
-    // Restore scroll position if it exists
     const savedScrollPosition = scrollPositions.current.get(location.key);
-    window.scrollTo(0, savedScrollPosition || 0);
-  }, [location]);
+
+    if (savedScrollPosition !== undefined) {
+        // Animate scroll to saved position if coming back to a previous route
+        window.scrollTo({ top: savedScrollPosition, behavior: 'smooth' });
+    } else {
+        // Scroll smoothly to top when navigating to a new page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Update previous location key for next effect run
+    prevLocationKey.current = location.key;
+}, [location]);
 
   return (
     <>
-      <ScrollToTop /> {/* Scroll to top on every route change */}
+      <ScrollToTop /> {/* Smooth scroll-to-top on every route change */}
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
@@ -56,7 +66,7 @@ export const AppRoutes = () => {
           animate="animate"
           exit="exit"
           variants={pageTransition}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.1 }}
         >
           <Routes location={location} key={location.pathname}>
             <Route element={<Loading />}>

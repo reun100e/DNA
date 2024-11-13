@@ -1,10 +1,70 @@
-# Django #
-__pycache__
-db.sqlite
+# Python
+*.py[cod]
+*.pyo
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+.eggs/
 
-# Environments
+# Virtual environment
 myenv/
 
-#
-notes/
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+/staticfiles/
+*.sqlite3
+*.pkl
+
+# Media files
+/media/
+
+# Local settings
+/local_settings.py
+/secrets.json
+
+# Static files
+/static/
+staticfiles/
+static_root/
+
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+/local_settings.py
+/secrets.json
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# dotenv
 .env
+*.env
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pycharm
+.idea/
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+notes/

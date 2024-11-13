@@ -1,13 +1,46 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DNA: Doctors Nexus Amity</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="theme-color" content="#292e71" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest"> -->
+  <title>DNA: Doctors Nexus Amity</title>
+
+  <meta name="description" content="DNA: Doctors Nexus Amity" />
+  <meta property="og:title" content="DNA: Doctors Nexus Amity">
+  <meta property="og:site_name" content=DNA>
+  <meta property="og:url" content=https://dna.org>
+  <meta property="og:description"
+    content="Empowering medical professionals with knowledge, skills, and a global network for better health outcomes.">
+  <meta property="og:type" content=website>
+  <!-- <meta property="og:image" content="https://dna.org/assets/888.webp"> -->
+
+</head>
+
+<body>
+  <div id="root"></div>
+  <div id="fallback-loading-screen" style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d0e26;
+    color: #292e71;
+    font-size: 1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+">
+  </div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

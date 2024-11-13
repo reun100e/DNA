@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, ChevronDown, ChevronRight } from "lucide-react";
 import { LightDarkToggle } from "@/components/ui/light-dark-toggle";
-import { programs } from "./constants/programs";
-import { courses } from "./constants/courses";
+import { committees } from "./constants/committees";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,11 +15,11 @@ const MobileSidebar: React.FC<SidebarProps> = ({
   closeSidebar,
   sidebarRef,
 }) => {
-  const [isProgramsOpen, setProgramsOpen] = useState(false);
   const [isCoursesOpen, setCoursesOpen] = useState(false);
 
-  const togglePrograms = () => setProgramsOpen(!isProgramsOpen);
   const toggleCourses = () => setCoursesOpen(!isCoursesOpen);
+
+  const navigate = useNavigate();
 
   return (
     <div
@@ -46,66 +46,28 @@ const MobileSidebar: React.FC<SidebarProps> = ({
         {/* Scrollable Content */}
         <div className="overflow-y-auto h-[80vh] space-y-4">
           <nav>
-            <a
-              href="/"
-              className="block py-2 hover:text-primary transition-colors"
+            <div
+              onClick={() => {closeSidebar(); navigate("/")}}
+              className="block py-5 hover:text-primary transition-colors"
             >
               Home
-            </a>
-            <a
-              href="/about"
-              className="block py-2 hover:text-primary transition-colors"
-            >
-              Introduction to DNA
-            </a>
-            <a
-              href="/research-hub"
-              className="block py-2 hover:text-primary transition-colors"
-            >
-              Medical Research Hub
-            </a>
-            <a
-              href="/marketplace"
-              className="block py-2 hover:text-primary transition-colors"
-            >
-              Doctor’s Marketplace
-            </a>
-
-            {/* Collapsible Programs Section */}
-            <div>
-              <button
-                onClick={togglePrograms}
-                className="flex items-center justify-between w-full py-2 hover:text-primary transition-colors"
-              >
-                <span>Programs</span>
-                {isProgramsOpen ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-              </button>
-              {isProgramsOpen && (
-                <div className="pl-4 space-y-2">
-                  {programs.map((program) => (
-                    <a
-                      key={program.title}
-                      href={program.href}
-                      className="block py-2 hover:text-primary transition-colors"
-                    >
-                      {program.title}
-                    </a>
-                  ))}
-                </div>
-              )}
             </div>
+
+            <div
+              onClick={() => {closeSidebar();navigate("/diimun")}}
+              className="block py-5 hover:text-primary transition-colors"
+            >
+              DIIMUN
+            </div>
+
 
             {/* Collapsible Courses Section */}
             <div>
               <button
                 onClick={toggleCourses}
-                className="flex items-center justify-between w-full py-2 hover:text-primary transition-colors"
+                className="flex items-center justify-between w-full py-5 hover:text-primary transition-colors"
               >
-                <span>Courses</span>
+                <span>Committees</span>
                 {isCoursesOpen ? (
                   <ChevronDown className="h-4 w-4" />
                 ) : (
@@ -114,38 +76,46 @@ const MobileSidebar: React.FC<SidebarProps> = ({
               </button>
               {isCoursesOpen && (
                 <div className="pl-4 space-y-2">
-                  {courses.map((course) => (
-                    <a
-                      key={course.title}
-                      href={course.href}
+                  {committees.map((component) => (
+                    <div
+                      key={component.title}
+                      onClick={() => {closeSidebar();navigate(component.link)}}
                       className="block py-2 hover:text-primary transition-colors"
                     >
-                      {course.title}
-                    </a>
+                      {component.title}
+                    </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <a
-              href="/gallery"
-              className="block py-2 hover:text-primary transition-colors"
+            <div
+              onClick={() => {closeSidebar();navigate("/gallery")}}
+              className="block py-5 hover:text-primary transition-colors"
             >
               Gallery
-            </a>
-            <a
-              href="/contact"
-              className="block py-2 hover:text-primary transition-colors"
+            </div>
+
+            <div
+              onClick={() => {closeSidebar();navigate("/about")}}
+              className="block py-5 hover:text-primary transition-colors"
+            >
+              About Us
+            </div>
+
+            <div
+              onClick={() => {closeSidebar();navigate("/contact")}}
+              className="block py-5 hover:text-primary transition-colors"
             >
               Contact
-            </a>
+            </div>
           </nav>
         </div>
 
         {/* Footer Section */}
         <div className="flex flex-col items-start">
           <LightDarkToggle />
-          <span className="text-xs text-muted-foreground pt-1">v.0.1</span>
+          <span className="text-xs text-muted-foreground pt-1">v.0.2 alpha</span>
         </div>
       </div>
     </div>

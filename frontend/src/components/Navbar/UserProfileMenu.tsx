@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,9 +12,10 @@ import { ProPic } from "../ProPic";
 
 const UserProfileMenu = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <div className="flex items-center space-x-4">
+    <div className="flex items-center space-x-4 cursor-pointer">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <a>
@@ -28,11 +30,11 @@ const UserProfileMenu = () => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
 
-          <a href="/dashboard" className="cursor-pointer">
+          <div onClick={() => navigate("/dashboard")} className="cursor-pointer">
             <DropdownMenuItem className="cursor-pointer">
               Dashboard
             </DropdownMenuItem>
-          </a>
+          </div>
           <DropdownMenuItem className="cursor-pointer" onClick={() => logout()}>
             Logout
           </DropdownMenuItem>

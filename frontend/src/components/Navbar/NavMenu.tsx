@@ -10,8 +10,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { programs } from "./constants/programs";
-import { courses } from "./constants/courses";
+import { diimun } from "./constants/diimun";
+import { committees } from "./constants/committees";
 import { Logo } from "../Logo";
 import { useNavigate } from "react-router-dom";
 
@@ -21,14 +21,16 @@ export function NavMenu() {
     <NavigationMenu>
       <NavigationMenuList className="gap-10">
         <NavigationMenuItem>
-          <NavigationMenuTrigger onClick={() => navigate("./")}>DNA</NavigationMenuTrigger>
+          <NavigationMenuTrigger onClick={() => navigate("./")}>
+            DNA
+          </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                    href="/"
+                  <div
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md cursor-pointer"
+                    onClick={() => navigate("./")}
                   >
                     <Logo />
                     <p className="text-sm leading-tight text-muted-foreground">
@@ -36,34 +38,28 @@ export function NavMenu() {
                       the globe. Explore knowledge-sharing programs and advance
                       your career.
                     </p>
-                  </a>
+                  </div>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/about" title="Introduction to DNA">
+              <ListItem className="cursor-pointer" onClick={() => navigate("/about")} title="Doctors Nexus Amity">
                 Learn about Doctors Nexus Amity and our mission to bridge
                 healthcare and technology for global health impact.
-              </ListItem>
-              <ListItem href="/research-hub" title="Medical Research Hub">
-                Collaborate on research projects with peers, share findings, and
-                contribute to medical innovations.
-              </ListItem>
-              <ListItem href="/marketplace" title="Doctor’s Marketplace">
-                Connect with patients and other doctors, offering
-                teleconsultations, second opinions, and other healthcare
-                services.
               </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger onClick={() => navigate("./programs")}>Programs</NavigationMenuTrigger>
+          <NavigationMenuTrigger onClick={() => navigate("./diimun")}>
+            DIIMUN
+          </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[1400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px] ">
-              {programs.map((component) => (
+              {diimun.map((component) => (
                 <ListItem
+                  className="cursor-pointer"
                   key={component.title}
                   title={component.title}
-                  href={component.href}
+                  onClick={() => navigate(component.link)}
                 >
                   {component.description}
                 </ListItem>
@@ -72,14 +68,17 @@ export function NavMenu() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger onClick={() => navigate("./courses")}>Courses</NavigationMenuTrigger>
+          <NavigationMenuTrigger onClick={() => navigate("./diimun")}>
+            Committees
+          </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px] ">
-              {courses.map((component) => (
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+              {committees.map((component) => (
                 <ListItem
+                  className="cursor-pointer"
                   key={component.title}
                   title={component.title}
-                  href={component.href}
+                  onClick={() => navigate(component.link)}
                 >
                   {component.description}
                 </ListItem>
@@ -113,7 +112,7 @@ const ListItem = React.forwardRef<
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <p className="line-clamp-3 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
         </a>

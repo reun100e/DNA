@@ -41,6 +41,37 @@ body {
   color: hsl(var(--secondary));
 }
 
+/* Hide scrollbar but retain scroll functionality */
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  padding-top: 3rem; /* Compensation for navbar height */
+  -ms-overflow-style: none;  /* Hide scrollbar but retain scroll functionality - For Internet Explorer */
+  scrollbar-width: none;     /* Hide scrollbar but retain scroll functionality - For Firefox */
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
 
 
 :root  {

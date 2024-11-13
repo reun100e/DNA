@@ -165,12 +165,12 @@ const VerificationPage: React.FC = () => {
 
         {otpType && (
         <div className="text-center mb-6">
-        <a
-          href="./dashboard"
+        <div
+          onClick={() => navigate("/dashboard")}
           className="text-sm font-semibold underline cursor-pointer text-destructive"
         >
           Not your Email ID?
-        </a>
+        </div>
       </div>
         )}
 

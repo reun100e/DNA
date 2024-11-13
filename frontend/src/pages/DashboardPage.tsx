@@ -53,7 +53,7 @@ const DashboardPage: React.FC = () => {
     <div className="dashboard p-6 max-w-lg mx-auto bg-popover rounded-lg shadow-md mt-10">
       <div className="profile-section text-center mb-6 flex flex-col items-center">
         <div className="profile-picture rounded-full w-24 h-24 mb-4 shadow-lg">
-          <ProPic size="w-24 h-24 mb-4"/>
+          <ProPic size="w-24 h-24 mb-4" />
         </div>
 
         <h2 className="text-xl font-bold">
@@ -61,9 +61,8 @@ const DashboardPage: React.FC = () => {
         </h2>
         <p className="text-gray-500">{user.bio || "DNA Member"}</p>
       </div>
-      
-      <div className="editable-fields space-y-6">
 
+      <div className="editable-fields space-y-6">
         <div className="field">
           <label className="block text-sm font-medium">Username</label>
           <div className="flex items-center">
@@ -87,7 +86,7 @@ const DashboardPage: React.FC = () => {
             user.is_email_verified ? (
               <BadgeCheck color="darkgreen" />
             ) : (
-              <BadgeX color="darkred"/>
+              <BadgeX color="darkred" />
             )
           }
           iconLabel={user.is_email_verified ? "Verified" : "Not Verified"}
@@ -96,9 +95,12 @@ const DashboardPage: React.FC = () => {
         {/* Display verification link if email is not verified */}
         {!user.is_email_verified && (
           <div className="text-center">
-            <a href="./verify" className="text-blue-600 hover:text-blue-800">
+            <div
+              onClick={() => navigate("/verify")}
+              className="text-blue-600 hover:text-blue-800"
+            >
               Click here to verify your email
-            </a>
+            </div>
           </div>
         )}
 
@@ -107,14 +109,9 @@ const DashboardPage: React.FC = () => {
           value={user.phone_number}
           onSave={(newValue) => handleFieldUpdate("phone_number", newValue)}
           isEditable={!user.is_phone_verified}
-          icon={
-            user.is_phone_verified ? (
-              <BadgeCheck color="darkgreen" />
-            ) : ""
-          }
+          icon={user.is_phone_verified ? <BadgeCheck color="darkgreen" /> : ""}
           iconLabel={user.is_phone_verified ? "Verified" : "Not Verified"}
         />
-
       </div>
     </div>
   );

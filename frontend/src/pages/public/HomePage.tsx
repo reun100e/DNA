@@ -1,5 +1,6 @@
 import { Hero } from "@/components/Hero/Hero";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
   Dialog,
@@ -15,6 +16,7 @@ import { Button } from "@mui/material";
 const HomePage = () => {
   const { isAuthenticated, user } = useAuth();
   const [showEmailDialog, setShowEmailDialog] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let timeout: NodeJS.Timeout | undefined;
@@ -49,7 +51,7 @@ const HomePage = () => {
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button type="button" onClick={() => setShowEmailDialog(false)}>
-                <a href="./verify">Verify</a>
+                <div onClick={() => navigate("/verify")}>Verify</div>
               </Button>
             </DialogClose>
           </DialogFooter>

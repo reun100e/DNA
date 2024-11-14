@@ -58,6 +58,11 @@ export const AppRoutes = () => {
     return () => clearTimeout(scrollTimeout);
   }, [location]);
 
+  const Docs = () => {
+    window.location.href = import.meta.env.VITE_DOCS_URL;
+    return null;
+  };
+
   return (
     <>
       <ScrollToTop /> {/* Smooth scroll-to-top on every route change */}
@@ -100,10 +105,11 @@ export const AppRoutes = () => {
               {/* Private Routes for authenticated and verified users */}
               <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/pay" element={<PaymentPage />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
+              <Route path="/docs" element={<Docs />} />
             </Route>
           </Routes>
         </motion.div>

@@ -18,9 +18,9 @@ const UserProfileMenu = () => {
     <div className="flex items-center space-x-4 cursor-pointer">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <a>
+          <div>
             <ProPic />
-          </a>
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end" className="w-auto">
           <DropdownMenuItem>

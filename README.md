@@ -4,7 +4,7 @@ The Official repo of DNA web app designed and developed by Dr. Aghosh
 ## Features
 - Authentication: JWT Http-only cookie
 - Design System: 2 Tier
-- User registration & OTP verification
+- User registration, OTP verification, Event registeration, Payment, Admin Dashboard
 
 ## Frontend
 - React Ts Vite with Shadcn components

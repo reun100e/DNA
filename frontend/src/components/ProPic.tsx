@@ -14,7 +14,7 @@ export const ProPic = React.forwardRef<HTMLDivElement, ProPicProps>(
     return (
       <Avatar ref={ref} className={`${size}`}>
         <AvatarImage
-          src={`${baseUrl}${user?.profile_picture}`}
+          // src={`${baseUrl}${user?.profile_picture}`}
           alt="User Avatar"
           className="h-full w-full object-cover"
         />

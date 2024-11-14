@@ -12,14 +12,15 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ["user", "event", "registration_date"]
         read_only_fields = ["registration_date"]
 
-    def validate(self, attrs):
-        user = attrs.get("user")
-        event = attrs.get("event")
+    def create(self, validated_data):
+        user = validated_data.get("user")
+        event = validated_data.get("event")
 
         # Check if the user has already registered for the event
         if Registration.objects.filter(user=user, event=event).exists():
             raise serializers.ValidationError(
-                "You are already registered for this event."
+                {"detail": "You are already registered for this event."}
             )
 
-        return attrs
+        return super().create(validated_data)
+

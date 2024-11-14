@@ -7,11 +7,6 @@ class Registration(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="registrations")
     registration_date = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'event'], name="unique_registration")
-        ]
-
     def __str__(self):
         return f"{self.user.first_name} registered for {self.event.name}."
 

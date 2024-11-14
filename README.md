@@ -32,3 +32,29 @@ The Official repo of DNA web app designed and developed by Dr. Aghosh
 
 ### Schema of the backend:
 <img src="assets/models.png" alt="Image 1" width="800"/>
+
+## Progress checklist
+- ~~Backend jwt http-only cookies auth~~
+- ~~Backend accounts, programs, registration, verification apps~~
+- ~~Backend REST APIs~~
+- ~~Backend DNA ID~~
+- ~~Frontend Context APIs~~
+- ~~Frontend mobile sidebar~~
+- ~~Frontend darkmode~~
+- ~~Frontend login and registration forms~~
+- ~~Frontend otp verification~~
+- ~~Backend  email otp setup~~
+- ~~Disable phone OTP verifiication~~
+- ~~Close sidebar from clicking outside~~
+- ~~Remove label and update placeholders in login/register forms~~
+- ~~use useNavigate instead of href~~
+- ~~create pages for events, privacy, terms and conditions, contact~~
+- ~~Create smooth UI UX for inital loading of app~~
+- Payment page
+- Admin Dashboard
+- Docs webpage
+
+
+# Contact
+Dr. Aghosh B Prasad <br>
+aghoshbprasad100@gmail.com

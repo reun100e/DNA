@@ -67,7 +67,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider>
-        <main className="flex flex-col min-h-screen">
+        <main className="flex flex-col min-h-screen pt-12">
           <TopNavbar />
           <AppRoutes />
           <Footer />

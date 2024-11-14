@@ -47,7 +47,6 @@ body {
 }
 
 body {
-  padding-top: 3rem; /* Compensation for navbar height */
   -ms-overflow-style: none;  /* Hide scrollbar but retain scroll functionality - For Internet Explorer */
   scrollbar-width: none;     /* Hide scrollbar but retain scroll functionality - For Firefox */
 }

@@ -50,7 +50,7 @@ The Official repo of DNA web app designed and developed by Dr. Aghosh
 - ~~use useNavigate instead of href~~
 - ~~create pages for events, privacy, terms and conditions, contact~~
 - ~~Create smooth UI UX for inital loading of app~~
-- Payment page
+- ~~Payment page~~
 - Admin Dashboard
 - ~~Docs webpage~~
 - ~~Frontend Contact form with emailjs~~

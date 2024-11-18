@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "programs",
     "registrations",
     "verification",
+    "payments",
     "django_extensions",
 ]
 

@@ -98,7 +98,7 @@ export const RegisterForm = () => {
     setSuccess(null);
     try {
       await register(data); // data contains both username and password
-      setSuccess("Login successful!");
+      setSuccess("");
     } catch (err) {
       setError((err as Error).message);
     }

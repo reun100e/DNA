@@ -7,6 +7,8 @@ export interface AuthUser {
     phone_number: string;
     is_phone_verified: boolean;
     is_email_verified: boolean;
+    is_registered: boolean;
+    is_payment_complete: boolean;
     dna_id: string;
     profile_picture: string;
     bio: string | null;

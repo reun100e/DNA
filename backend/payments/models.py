@@ -4,8 +4,8 @@ from registrations.models import Registration
 
 
 class Payment(models.Model):
-    registration = models.OneToOneField(
-        Registration, on_delete=models.CASCADE, related_name="payment"
+    registration = models.ForeignKey(
+        Registration, on_delete=models.CASCADE, related_name="payments"
     )
     dna_transaction_id = models.CharField(max_length=100, unique=True)
     upi_transaction_id = models.CharField(max_length=100, blank=True, null=True)

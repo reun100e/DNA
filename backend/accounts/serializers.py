@@ -121,6 +121,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(source="profile.profile_picture", required=False)
     bio = serializers.CharField(source="profile.bio", required=False)
 
+    is_registered = serializers.BooleanField(source="profile.is_registered")
+    is_payment_complete = serializers.BooleanField(source="profile.is_payment_complete")
+
     class Meta:
         model = User
         fields = [
@@ -131,6 +134,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "phone_number",
             "is_phone_verified",
             "is_email_verified",
+            "is_registered",
+            "is_payment_complete",
             "dna_id",
             "profile_picture",
             "bio",

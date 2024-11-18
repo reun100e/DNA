@@ -42,6 +42,7 @@ def set_unique_user_id(sender, instance, **kwargs):
                 instance.dna_id = new_id
                 break
 
+
 # Signal to ensure is_email_verified and is_phone_verified are reset to False only if email or phone_number has changed.
 @receiver(pre_save, sender=User)
 def reset_verification_on_change(sender, instance, **kwargs):
@@ -67,20 +68,10 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(
         upload_to="private/profile_pictures/", blank=True, null=True
     )
-    # Add other fields as needed
+    is_payment_complete = models.BooleanField(default=False)
+    is_registered = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
 
-# Signal to create UserProfile when a new User is created
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-
-# Signal to save the UserProfile whenever the User is saved
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()

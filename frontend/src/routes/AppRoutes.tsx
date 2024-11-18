@@ -53,7 +53,7 @@ export const AppRoutes = () => {
         behavior: "smooth",
       });
       document.body.style.overflow = ""; // Restore body overflow
-    }, 300); // 300ms delay to match transition duration
+    }, 100); // 300ms delay to match transition duration
 
     return () => clearTimeout(scrollTimeout);
   }, [location]);
@@ -73,7 +73,7 @@ export const AppRoutes = () => {
           animate="animate"
           exit="exit"
           variants={pageTransition}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.1 }}
         >
           <Routes location={location} key={location.pathname}>
             <Route element={<Loading />}>

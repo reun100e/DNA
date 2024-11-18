@@ -54,6 +54,13 @@ const MobileSidebar: React.FC<SidebarProps> = ({
             </div>
 
             <div
+              onClick={() => {closeSidebar();navigate("/docs")}}
+              className="block py-5 hover:text-primary transition-colors"
+            >
+              DNA Wiki
+            </div>
+
+            <div
               onClick={() => {closeSidebar();navigate("/diimun")}}
               className="block py-5 hover:text-primary transition-colors"
             >

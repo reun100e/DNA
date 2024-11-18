@@ -41,9 +41,21 @@ export function NavMenu() {
                   </div>
                 </NavigationMenuLink>
               </li>
-              <ListItem className="cursor-pointer" onClick={() => navigate("/about")} title="Doctors Nexus Amity">
+              <ListItem
+                className="cursor-pointer"
+                onClick={() => navigate("/about")}
+                title="Doctors Nexus Amity"
+              >
                 Learn about Doctors Nexus Amity and our mission to bridge
                 healthcare and technology for global health impact.
+              </ListItem>
+              <ListItem
+                className="cursor-pointer"
+                onClick={() => navigate("/docs")}
+                title="DNA Wiki: Documents & Guides"
+              >
+                Study guides, preparation materials, program outlines, you name
+                it, DNA wiki has the wealth of information you need.
               </ListItem>
             </ul>
           </NavigationMenuContent>

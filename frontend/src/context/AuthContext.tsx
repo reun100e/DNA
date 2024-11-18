@@ -22,6 +22,11 @@ import {
 } from "../services/authService";
 import { resetRefreshState } from "../utils/refreshUtils";
 
+import {
+  fetchMyRegistrations,
+  registerForEvent,
+} from "@/services/eventService";
+
 interface AuthContextProps {
   user: AuthUser | null;
   isAuthenticated: boolean;
@@ -33,6 +38,8 @@ interface AuthContextProps {
   fetchUserProfile: () => Promise<AuthUser>;
   updateUser: (updatedUser: Partial<AuthUser>) => Promise<void>;
   baseUrl: string;
+  fetchMyRegistrations: () => Promise<any[]>;
+  registerForEvent: (eventId: number) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -69,7 +76,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout();
       } else {
         console.error("Failed to fetch user profile", error);
-        logout();
       }
     } finally {
       setLoading(false); // Set loading to false once the authentication check is done
@@ -95,7 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       navigate("/verify");
     } catch (error) {
       console.error("Registration failed:", error);
-      alert("Registration failed. Please try again.");
+      alert("Registration failed. Please try again later.");
     }
   };
 
@@ -144,6 +150,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         updateUser,
         baseUrl,
         fetchUserProfile: handleFetchUserProfile,
+        fetchMyRegistrations,
+        registerForEvent,
       }}
     >
       {children}

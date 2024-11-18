@@ -52,7 +52,8 @@ The Official repo of DNA web app designed and developed by Dr. Aghosh
 - ~~Create smooth UI UX for inital loading of app~~
 - Payment page
 - Admin Dashboard
-- Docs webpage
+- ~~Docs webpage~~
+- ~~Frontend Contact form with emailjs~~
 
 
 # Contact

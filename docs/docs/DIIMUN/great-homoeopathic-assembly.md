@@ -15,3 +15,5 @@ In the Great Homoeopathic Assembly, participants are invited to embody historica
 - **Celebrate Legacy**: Pay homage to the influential figures who shaped homeopathy, and honor their contributions by becoming a voice of the future.
 
 [Learn More](https://dev.onthewifi.com/great-homoeopathic-assembly)
+
+---

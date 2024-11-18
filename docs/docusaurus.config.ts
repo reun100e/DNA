@@ -5,12 +5,12 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Doctors Nexus Amity',
-  tagline: 'Doctors Nexus Amity',
+  title: 'DNA Wiki',
+  tagline: 'Doctors Nexus Amity: Wiki',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://dna.org',
+  url: 'https://lib.onthewifi.com/',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -67,10 +67,21 @@ const config: Config = {
   ],
 
   themeConfig: {
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: false,
+      },
+    },
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
+    },
     // Replace with your project's social card
     image: 'img/logo.png',
     navbar: {
-      title: 'Doctors Nexus Amity',
+      title: 'DNA Wiki',
       logo: {
         alt: 'DNA Logo',
         src: 'img/logo.png',
@@ -83,11 +94,11 @@ const config: Config = {
         //   label: 'Doctors Integrated International MUN',
         // },
         // { to: '/blog', label: 'Blog', position: 'left' },
-        {
-          href: 'https://dev.onthewifi.com/',
-          label: 'DNA',
-          position: 'right',
-        },
+        // {
+        //   href: 'https://dev.onthewifi.com/',
+        //   label: 'DNA',
+        //   position: 'right',
+        // },
       ],
     },
     footer: {

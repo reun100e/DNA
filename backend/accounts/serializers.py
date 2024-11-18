@@ -98,6 +98,9 @@ class BasicUserSerializer(serializers.ModelSerializer):
     """
 
     profile_picture = serializers.ImageField(source="profile.profile_picture")
+    is_registered = serializers.BooleanField(source="profile.is_registered")
+    is_payment_complete = serializers.BooleanField(source="profile.is_payment_complete")
+
 
     class Meta:
         model = User
@@ -107,6 +110,8 @@ class BasicUserSerializer(serializers.ModelSerializer):
             "email",
             "is_phone_verified",
             "is_email_verified",
+            "is_registered",
+            "is_payment_complete",
             "profile_picture",
         ]
 

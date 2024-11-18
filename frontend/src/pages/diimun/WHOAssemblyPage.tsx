@@ -1,9 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { CTA } from "@/components/CTA";
 
 export const WHOAssemblyPage = () => {
-  const navigate = useNavigate();
   return (
     <section className="relative text-foreground py-20 px-6 sm:px-10 lg:px-20">
       <div className="max-w-screen-lg mx-auto">
